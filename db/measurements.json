@@ -1,0 +1,5 @@
+[
+  { "name": "unit" },
+  { "name": "liter", "symbol": "L" },
+  { "name": "gram", "symbol": "g" }
+]
