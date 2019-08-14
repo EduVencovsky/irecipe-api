@@ -3,7 +3,8 @@ const _ = require('lodash')
 
 exports.params = (req, res, next, id) => {
     Recipe.findById(id)
-        .populate('author categories')
+        .populate('author', 'username email')
+        .populate('ingredients.ingredient ingredients.measurement')
         .exec()
         .then(recipe => {
             if (!recipe) {
@@ -18,9 +19,10 @@ exports.params = (req, res, next, id) => {
 
 exports.get = (req, res, next) => {
     Recipe.find({})
-        .populate('author categories')
+        .populate('author', 'username email')
+        .populate('ingredients.ingredient ingredients.measurement')
         .exec()
-        .then(categories => res.json(categories))
+        .then(recipes => res.json(recipes))
         .catch(error => next(error))
 }
 
@@ -39,6 +41,7 @@ exports.put = (req, res, next) => {
 
 exports.post = (req, res, next) => {
     let newRecipe = req.body
+    newRecipe.author = req.user._id
     Recipe.create(newRecipe)
         .then(recipe => res.json(recipe))
         .catch(error => next(error))
