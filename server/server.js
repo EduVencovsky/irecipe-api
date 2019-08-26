@@ -19,4 +19,12 @@ app.use('/api', api)
 // setup auth router
 app.use('/auth', auth)
 
+app.use((err, req, res, next) => {
+    if (err.name === 'UnauthorizedError') {
+        console.log('UnauthorizedError, No Token found')
+        return res.status(401).send(err.message)
+    }
+    res.send(err)
+})
+
 module.exports = app
