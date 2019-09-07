@@ -32,13 +32,15 @@ const generatedb = async () => {
         axios.post('/api/ingredient', ingredient)
     )
     await Promise.all(ingredientsPromises)
-        .then(values => consoleThen(values))
+        .then(values => values.map(value => consoleThen(value)))
         .catch(consoleCatch)
 
     const measurementsPromises = measurements.map(measurement =>
         axios.post('/api/measurement', measurement)
     )
     await Promise.all(measurementsPromises)
-        .then(values => consoleThen(values))
+        .then(values => values.map(value => consoleThen(value)))
         .catch(consoleCatch)
 }
+
+generatedb()
