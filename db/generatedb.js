@@ -4,8 +4,10 @@ const ingredients = require('./ingredients.json')
 const measurements = require('./measurements.json')
 const uri = 'http://localhost:3000/'
 
+const UserModel = require('../server/api/user/userModel')
+
 const consoleThen = res => console.log(res.data)
-const consoleCatch = error => console.log(error.response.data)
+const consoleCatch = error => console.log(error.response)
 
 let token = ''
 
@@ -43,4 +45,8 @@ const generatedb = async () => {
         .catch(consoleCatch)
 }
 
+const deleteUsers = () => {
+    UserModel.deleteMany()
+}
+// deleteUsers()
 generatedb()

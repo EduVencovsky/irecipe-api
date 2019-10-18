@@ -15,20 +15,28 @@ const UserSchema = new Schema({
     email: {
         type: String,
         required: true
+    },
+    firstname: {
+        type: String,
+        require: true
+    },
+    lastname: {
+        type: String,
+        require: true
     }
 })
 
-UserSchema.pre('save', function(next) {
+UserSchema.pre('save', function (next) {
     if (!this.isModified('password')) return next()
     this.password = this.encryptPassword(this.password)
     next()
 })
 
 UserSchema.methods = {
-    authenticate: function(plainTextPassWord) {
+    authenticate: function (plainTextPassWord) {
         return bcrypt.compareSync(plainTextPassWord, this.password)
     },
-    encryptPassword: function(plainTextPassWord) {
+    encryptPassword: function (plainTextPassWord) {
         if (!plainTextPassWord) return ''
         else {
             const salt = bcrypt.genSaltSync(10)

@@ -10,6 +10,10 @@ const RecipeSchema = new Schema({
         type: String,
         required: true
     },
+    timeMilli: {
+        type: Number,
+        required: false
+    },
     author: {
         type: Schema.Types.ObjectId,
         ref: 'user',
