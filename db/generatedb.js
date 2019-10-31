@@ -2,6 +2,8 @@ const axios = require('axios')
 const users = require('./users.json')
 const ingredients = require('./ingredients.json')
 const measurements = require('./measurements.json')
+const appliances = require('./appliances.json')
+
 const uri = 'http://localhost:3000/'
 
 const UserModel = require('../server/api/user/userModel')
@@ -41,6 +43,13 @@ const generatedb = async () => {
         axios.post('/api/measurement', measurement)
     )
     await Promise.all(measurementsPromises)
+        .then(values => values.map(value => consoleThen(value)))
+        .catch(consoleCatch)
+
+    const appliancesPromises = appliances.map(measurement =>
+        axios.post('/api/measurement', measurement)
+    )
+    await Promise.all(appliancesPromises)
         .then(values => values.map(value => consoleThen(value)))
         .catch(consoleCatch)
 }

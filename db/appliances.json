@@ -1,0 +1,14 @@
+[
+  {
+    "name": "Microwave",
+    "description": "Microwave for heating food"
+  },
+  {
+    "name": "Stove",
+    "description": "Stove for cooking food"
+  },
+  {
+    "name": "Blender",
+    "description": "Cut everything you need"
+  }
+]
