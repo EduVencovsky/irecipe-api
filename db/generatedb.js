@@ -46,8 +46,8 @@ const generatedb = async () => {
         .then(values => values.map(value => consoleThen(value)))
         .catch(consoleCatch)
 
-    const appliancesPromises = appliances.map(measurement =>
-        axios.post('/api/measurement', measurement)
+    const appliancesPromises = appliances.map(appliance =>
+        axios.post('/api/appliance', appliance)
     )
     await Promise.all(appliancesPromises)
         .then(values => values.map(value => consoleThen(value)))
