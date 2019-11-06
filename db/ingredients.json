@@ -1,10 +1,42 @@
 [
-  { "name": "salt", "description": "Salt for food" },
-  { "name": "sugar", "description": "Sugar for food" },
-  { "name": "tomate", "description": "Tomate is a vegetable" },
-  { "name": "chocolate", "description": "Any type of chocolate" },
-  { "name": "dark-chocolate", "description": "Less sweet chocolate" },
-  { "name": "egg", "description": "Wich came first, the egg or the chicken?" },
-  { "name": "cheese", "description": "Fungus is the evolution of cheese?" },
-  { "name": "milk", "description": "Muuuu juice" }
+  {
+    "name": "salt",
+    "description": "Salt for food",
+    "type": 0
+  },
+  {
+    "name": "sugar",
+    "description": "Sugar for food",
+    "type": 0
+  },
+  {
+    "name": "tomate",
+    "description": "Tomate is a vegetable",
+    "type": 0
+  },
+  {
+    "name": "chocolate",
+    "description": "Any type of chocolate",
+    "type": 0
+  },
+  {
+    "name": "dark-chocolate",
+    "description": "Less sweet chocolate",
+    "type": 0
+  },
+  {
+    "name": "egg",
+    "description": "Wich came first, the egg or the chicken?",
+    "type": 0
+  },
+  {
+    "name": "cheese",
+    "description": "Fungus is the evolution of cheese?",
+    "type": 0
+  },
+  {
+    "name": "milk",
+    "description": "Muuuu juice",
+    "type": 1
+  }
 ]

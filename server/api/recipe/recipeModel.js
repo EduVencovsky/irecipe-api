@@ -10,7 +10,7 @@ const RecipeSchema = new Schema({
         type: String,
         required: true
     },
-    timeMilli: {
+    time: {
         type: Number,
         required: false
     },
@@ -26,17 +26,24 @@ const RecipeSchema = new Schema({
                 ref: 'ingredient',
                 required: true
             },
-            measurement: {
-                type: Schema.Types.ObjectId,
-                ref: 'measurement',
-                required: true
-            },
             quantity: {
                 type: Number,
                 required: true
             }
         }
-    ]
+    ],
+    appliances: [{
+        appliance: {
+            type: Schema.Types.ObjectId,
+            ref: 'appliances',
+            required: true
+        },
+        quantity: {
+            type: Number,
+            required: true
+        }
+    }]
+
 })
 
 module.exports = mongoose.model('recipe', RecipeSchema)
