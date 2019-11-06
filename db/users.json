@@ -4,20 +4,23 @@
     "password": "edu",
     "email": "edu@edu.com",
     "firstname": "Eduardo",
-    "lastname": "Vencovsky"
+    "lastname": "Vencovsky",
+    "detail": "meunome e eduardo"
   },
   {
     "username": "leo",
     "password": "leo",
     "email": "leo@leo.com",
     "firstname": "Leonardo",
-    "lastname": "Vencovsky"
+    "lastname": "Vencovsky",
+    "detail": "meunome e leonardo"
   },
   {
     "username": "admin",
     "password": "admin",
     "email": "admin@admin.com",
     "firstname": "Admin",
-    "lastname": "Istrator"
+    "lastname": "Istrator",
+    "detail": "meunome e admin"
   }
 ]

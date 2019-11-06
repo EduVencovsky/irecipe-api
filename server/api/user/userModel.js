@@ -12,6 +12,16 @@ const UserSchema = new Schema({
         type: String,
         required: true
     },
+    detail: {
+        type: String,
+        required: true
+    },
+    favorites: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'recipes',
+        }
+    ],
     email: {
         type: String,
         required: true

@@ -57,5 +57,5 @@ const generatedb = async () => {
 const deleteUsers = () => {
     UserModel.deleteMany()
 }
-// deleteUsers()
-generatedb()
+deleteUsers()
+//generatedb()
