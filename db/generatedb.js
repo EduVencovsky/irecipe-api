@@ -3,8 +3,12 @@ const users = require('./users.json')
 const ingredients = require('./ingredients.json')
 const measurements = require('./measurements.json')
 const appliances = require('./appliances.json')
+const config = require('../server/config/config')
+const mongoose = require('mongoose')
 
 const uri = 'http://localhost:3000/'
+
+mongoose.connect(config.db.url, { useCreateIndex: true, useNewUrlParser: true })
 
 const UserModel = require('../server/api/user/userModel')
 
@@ -55,7 +59,10 @@ const generatedb = async () => {
 }
 
 const deleteUsers = () => {
-    UserModel.deleteMany()
+    UserModel.deleteMany({})
+        .then(consoleThen)
+        .catch(consoleCatch)
 }
-deleteUsers()
-//generatedb()
+// deleteUsers()
+// generatedb()
+return 0;
