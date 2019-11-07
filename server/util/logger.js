@@ -8,11 +8,11 @@ const noop = () => { }
 const consoleLog = config.logging ? console.log.bind(console) : noop
 
 const logger = {
-    log(){
+    log() {
         const args = _.toArray(arguments)
             .map(arg => {
                 if (typeof arg === 'object') {
-                    let str = JSON.stringify(arg, 2)
+                    let str = JSON.stringify(arg, null, 2)
                     return str.cyan
                 } else {
                     arg += ''
