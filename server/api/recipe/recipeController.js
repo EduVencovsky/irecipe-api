@@ -1,26 +1,33 @@
 const Recipe = require('./recipeModel')
+const Ingredients = require('../ingredient/ingredientModel')
+const Appliance = require('../appliance/applianceModel')
+const logger = require('../../util/logger')
 const _ = require('lodash')
 
-exports.params = (req, res, next, id) => {
-    Recipe.findById(id)
+exports.params = (req, res, next, _id) => {
+    Recipe.findOne({ _id })
         .populate('author', 'username email')
-        .populate('ingredients.ingredient ingredients.measurement')
+        .populate('ingredients.ingredient')
+        .populate('appliances.appliance')
         .exec()
         .then(recipe => {
             if (!recipe) {
-                next(new Error('No recipe with id ' + id))
+                next(new Error('No recipe with id ' + _id))
             } else {
                 req.recipe = recipe
                 next()
             }
         })
-        .catch(error => next(error))
+        .catch(error => {
+            logger.log('error')
+            next(error)
+        })
 }
 
 exports.get = (req, res, next) => {
     Recipe.find({})
         .populate('author', 'username email')
-        .populate('ingredients.ingredient ingredients.measurement')
+        .populate('ingredients.ingredient appliances.measurement')
         .exec()
         .then(recipes => res.json(recipes))
         .catch(error => next(error))
@@ -41,7 +48,7 @@ exports.put = (req, res, next) => {
 
 exports.post = (req, res, next) => {
     let newRecipe = req.body
-    newRecipe.author = req.user._id
+    newRecipe.author = req.user
     Recipe.create(newRecipe)
         .then(recipe => res.json(recipe))
         .catch(error => next(error))
@@ -54,5 +61,29 @@ exports.delete = (req, res, next) => {
         } else {
             res.json(removed)
         }
+    })
+}
+
+exports.getFullRecipe = async (req, res, next) => {
+    let recipe = req.recipe ? req.recipe.toObject() : new Recipe().toObject()
+    let ingredients = await Ingredients.find({}).lean()
+    let appliances = await Appliance.find({}).lean()
+    logger.log('recipe', recipe)
+    recipe.ingredients = mergeQuantity(ingredients, recipe.ingredients.map(x =>
+        ({ ...x.ingredient, quantity: x.quantity }))
+    )
+    recipe.appliances = mergeQuantity(appliances, recipe.appliances.map(x =>
+        ({ ...x.appliance, quantity: x.quantity }))
+    )
+    logger.log('recipe', recipe)
+
+    res.json(recipe)
+}
+
+const mergeQuantity = (apiData, selectedData, key = '_id') => {
+    return apiData.map(ing => {
+        const match = selectedData.find(x => x[key] && ing[key] && x[key].toString() == ing[key].toString())
+        const quantity = match ? match.quantity : 0
+        return { ...ing, quantity }
     })
 }

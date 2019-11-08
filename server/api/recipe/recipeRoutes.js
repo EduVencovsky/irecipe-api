@@ -11,6 +11,10 @@ router
     .post(userValidation, controller.post)
 
 router
+    .route('/fullData/:id?')
+    .get(controller.getFullRecipe)
+
+router
     .route('/:id')
     .get(controller.getOne)
     .put(userValidation, controller.put)

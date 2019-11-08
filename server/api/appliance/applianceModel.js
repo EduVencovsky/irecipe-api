@@ -12,4 +12,4 @@ const ApplianceSchema = new Schema({
     }
 })
 
-module.exports = mongoose.model('appliance', ApplianceSchema)
+module.exports = mongoose.model('appliances', ApplianceSchema)
