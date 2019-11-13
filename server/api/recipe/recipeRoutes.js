@@ -7,16 +7,16 @@ router.param('id', controller.params)
 
 router
     .route('/')
-    .get(controller.get)
+    .get(userValidation, controller.get)
     .post(userValidation, controller.post)
 
 router
     .route('/fullData/:id?')
-    .get(controller.getFullRecipe)
+    .get(userValidation, controller.getFullRecipe)
 
 router
     .route('/:id')
-    .get(controller.getOne)
+    .get(userValidation, controller.getOne)
     .put(userValidation, controller.put)
     .delete(userValidation, controller.delete)
 

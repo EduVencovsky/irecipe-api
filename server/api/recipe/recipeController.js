@@ -5,7 +5,7 @@ const logger = require('../../util/logger')
 const _ = require('lodash')
 
 exports.params = (req, res, next, _id) => {
-    Recipe.findOne({ _id })
+    Recipe.findOne({ _id, author: req.user })
         .populate('author', 'username email')
         .populate('ingredients.ingredient')
         .populate('appliances.appliance')
@@ -19,13 +19,12 @@ exports.params = (req, res, next, _id) => {
             }
         })
         .catch(error => {
-            logger.log('error')
             next(error)
         })
 }
 
 exports.get = (req, res, next) => {
-    Recipe.find({})
+    Recipe.find({ author: req.user })
         .populate('author', 'username email')
         .populate('ingredients.ingredient appliances.measurement')
         .exec()
@@ -49,7 +48,8 @@ exports.put = (req, res, next) => {
 exports.post = (req, res, next) => {
     let newRecipe = req.body
     newRecipe.author = req.user
-    Recipe.create(newRecipe)
+    let options = { upsert: true, new: true, setDefaultsOnInsert: true };
+    Recipe.findOneAndUpdate({ _id: newRecipe._id }, newRecipe, options)
         .then(recipe => res.json(recipe))
         .catch(error => next(error))
 }
@@ -68,14 +68,12 @@ exports.getFullRecipe = async (req, res, next) => {
     let recipe = req.recipe ? req.recipe.toObject() : new Recipe().toObject()
     let ingredients = await Ingredients.find({}).lean()
     let appliances = await Appliance.find({}).lean()
-    logger.log('recipe', recipe)
     recipe.ingredients = mergeQuantity(ingredients, recipe.ingredients.map(x =>
         ({ ...x.ingredient, quantity: x.quantity }))
     )
     recipe.appliances = mergeQuantity(appliances, recipe.appliances.map(x =>
         ({ ...x.appliance, quantity: x.quantity }))
     )
-    logger.log('recipe', recipe)
 
     res.json(recipe)
 }
