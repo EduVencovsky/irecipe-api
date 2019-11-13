@@ -24,7 +24,8 @@ exports.params = (req, res, next, _id) => {
 }
 
 exports.get = (req, res, next) => {
-    Recipe.find({ author: req.user })
+    const author = req.user
+    Recipe.find({ author })
         .populate('author', 'username email')
         .populate('ingredients.ingredient appliances.measurement')
         .exec()
