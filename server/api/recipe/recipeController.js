@@ -27,7 +27,8 @@ exports.get = (req, res, next) => {
     const author = req.user
     Recipe.find({ author })
         .populate('author', 'username email')
-        .populate('ingredients.ingredient appliances.measurement')
+        .populate('ingredients.ingredient')
+        .populate('appliances.appliance')
         .exec()
         .then(recipes => res.json(recipes))
         .catch(error => next(error))
@@ -79,10 +80,36 @@ exports.getFullRecipe = async (req, res, next) => {
     res.json(recipe)
 }
 
+exports.getRecipeByIngredient = (req, res, next) => {
+    logger.log('recipe')
+
+    const ingredients = req.body.ingredients
+    logger.log(ingredients)
+    Recipe.find({})
+        .populate('author', 'username email')
+        .populate('ingredients.ingredient')
+        .populate('appliances.appliance')
+        .exec()
+        .then(modelRecipes => {
+            const recipes = modelRecipes.map(recipe => recipe.toObject())
+            const doableRecipes = checkIfHaveIngredients(recipes, ingredients)
+            res.json(doableRecipes)
+        })
+        .catch(error => next(error))
+}
+
 const mergeQuantity = (apiData, selectedData, key = '_id') => {
     return apiData.map(ing => {
         const match = selectedData.find(x => x[key] && ing[key] && x[key].toString() == ing[key].toString())
         const quantity = match ? match.quantity : 0
         return { ...ing, quantity }
     })
+}
+
+const checkIfHaveIngredients = (recipes, userIngredients) => {
+    return recipes.filter(recipe =>
+        !recipe.ingredients.some(({ ingredient }) =>
+            !userIngredients.map(x => x._id.toString()).includes(ingredient._id.toString())
+        )
+    )
 }

@@ -5,18 +5,23 @@ const userValidation = [decodeToken(), getFreshUser()]
 
 router.use(userValidation)
 
-router.param('id', controller.params)
+router
+    .route('/ingredientSearch')
+    .post(controller.getRecipeByIngredient)
 
 router
     .route('/')
     .get(controller.get)
     .post(controller.post)
 
+router.param('id', controller.params)
+
 router
     .route('/fullData/:id?')
     .get(controller.getFullRecipe)
 
 router
+    .use(userValidation)
     .route('/:id')
     .get(controller.getOne)
     .put(controller.put)
