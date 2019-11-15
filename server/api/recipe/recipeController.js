@@ -92,7 +92,7 @@ exports.getRecipeByIngredient = (req, res, next) => {
         .exec()
         .then(modelRecipes => {
             const recipes = modelRecipes.map(recipe => recipe.toObject())
-            const doableRecipes = checkIfHaveIngredients(recipes, ingredients)
+            const doableRecipes = getRecipeByIngredients(recipes, ingredients)
             res.json(doableRecipes)
         })
         .catch(error => next(error))
@@ -106,10 +106,10 @@ const mergeQuantity = (apiData, selectedData, key = '_id') => {
     })
 }
 
-const checkIfHaveIngredients = (recipes, userIngredients) => {
-    return recipes.filter(recipe =>
+const getRecipeByIngredients = (recipes, userIngredients) =>
+    recipes.filter(recipe =>
         !recipe.ingredients.some(({ ingredient }) =>
             !userIngredients.map(x => x._id.toString()).includes(ingredient._id.toString())
         )
     )
-}
+
