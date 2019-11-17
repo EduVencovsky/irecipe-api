@@ -84,7 +84,7 @@ exports.getRecipeByIngredient = (req, res, next) => {
     logger.log('recipe')
 
     const ingredients = req.body.ingredients
-    logger.log(ingredients)
+
     Recipe.find({})
         .populate('author', 'username email')
         .populate('ingredients.ingredient')
@@ -93,6 +93,8 @@ exports.getRecipeByIngredient = (req, res, next) => {
         .then(modelRecipes => {
             const recipes = modelRecipes.map(recipe => recipe.toObject())
             const doableRecipes = getRecipeByIngredients(recipes, ingredients)
+            const byQuantity = getRecipeByIngredientsQuantity(recipes, ingredients)
+            logger.log(byQuantity)
             res.json(doableRecipes)
         })
         .catch(error => next(error))
@@ -113,3 +115,12 @@ const getRecipeByIngredients = (recipes, userIngredients) =>
         )
     )
 
+const getRecipeByIngredientsQuantity = (recipes, userIngredients) =>
+    recipes.filter(recipe =>
+        !recipe.ingredients.some(({ ingredient, quantity }) => {
+            const userIngredient = userIngredients.find(x => x._id.toString() === ingredient._id.toString())
+            if (userIngredient)
+                return quantity >= userIngredient.quantity
+            return true
+        })
+    )
