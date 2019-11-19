@@ -10,5 +10,17 @@
   {
     "name": "Blender",
     "description": "Cut everything you need"
+  },
+  {
+    "name": "Pan",
+    "description": "Any Pan"
+  },
+  {
+    "name": "Frying Pan",
+    "description": "Fry anything you want"
+  },
+  {
+    "name": "Pressure Cooker",
+    "description": "Cook with pressure"
   }
 ]

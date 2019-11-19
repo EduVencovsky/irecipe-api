@@ -88,5 +88,7 @@ const deleteAll = () => {
     deleteIngredients()
     deleteRecipes()
 }
-// deleteAll()
-// generatedb()
+deleteAll()
+generatedb()
+
+process.exit()

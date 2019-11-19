@@ -6,6 +6,7 @@
   "scripts": {
     "mongo": "start cmd /c mongod --dbpath=D:\\MongoDB",
     "dev": "nodemon index",
+    "db": "node db/generateDb",
     "test": "mocha server/spec"
   },
   "author": "",

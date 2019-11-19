@@ -21,7 +21,6 @@ router
     .get(controller.getFullRecipe)
 
 router
-    .use(userValidation)
     .route('/:id')
     .get(controller.getOne)
     .put(controller.put)
