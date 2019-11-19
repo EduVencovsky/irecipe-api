@@ -1,41 +1,41 @@
 [
   {
-    "name": "salt",
+    "name": "Salt",
     "description": "Salt for food",
     "type": 0
   },
   {
-    "name": "sugar",
+    "name": "Sugar",
     "description": "Sugar for food",
     "type": 0
   },
   {
-    "name": "tomate",
+    "name": "Tomate",
     "description": "Tomate is a vegetable",
     "type": 0
   },
   {
-    "name": "chocolate",
+    "name": "Chocolate",
     "description": "Any type of chocolate",
     "type": 0
   },
   {
-    "name": "dark-chocolate",
+    "name": "Dark chocolate",
     "description": "Less sweet chocolate",
     "type": 0
   },
   {
-    "name": "egg",
+    "name": "Egg",
     "description": "Wich came first, the egg or the chicken?",
     "type": 0
   },
   {
-    "name": "cheese",
+    "name": "Cheese",
     "description": "Fungus is the evolution of cheese?",
     "type": 0
   },
   {
-    "name": "milk",
+    "name": "Milk",
     "description": "Muuuu juice",
     "type": 1
   }
