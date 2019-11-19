@@ -11,6 +11,9 @@ const uri = 'http://localhost:3000/'
 mongoose.connect(config.db.url, { useCreateIndex: true, useNewUrlParser: true })
 
 const UserModel = require('../server/api/user/userModel')
+const RecipeModel = require('../server/api/recipe/recipeModel')
+const ApplianceModel = require('../server/api/appliance/applianceModel')
+const IngredientModel = require('../server/api/ingredient/ingredientModel')
 
 const consoleThen = res => console.log(res.data)
 const consoleCatch = error => console.log(error.response)
@@ -63,6 +66,27 @@ const deleteUsers = () => {
         .then(consoleThen)
         .catch(consoleCatch)
 }
-// deleteUsers()
+const deleteAppliances = () => {
+    ApplianceModel.deleteMany({})
+        .then(consoleThen)
+        .catch(consoleCatch)
+}
+const deleteIngredients = () => {
+    IngredientModel.deleteMany({})
+        .then(consoleThen)
+        .catch(consoleCatch)
+}
+const deleteRecipes = () => {
+    RecipeModel.deleteMany({})
+        .then(consoleThen)
+        .catch(consoleCatch)
+}
+
+const deleteAll = () => {
+    deleteUsers()
+    deleteAppliances()
+    deleteIngredients()
+    deleteRecipes()
+}
+// deleteAll()
 // generatedb()
-return 0;
