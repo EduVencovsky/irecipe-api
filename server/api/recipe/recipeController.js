@@ -80,9 +80,8 @@ exports.getFullRecipe = async (req, res, next) => {
 }
 
 exports.getRecipeByIngredient = (req, res, next) => {
-    logger.log('recipe')
 
-    const ingredients = req.body.ingredients
+    const { ingredients, searchType } = req.body
 
     Recipe.find({})
         .populate('author', 'username email')
@@ -92,8 +91,7 @@ exports.getRecipeByIngredient = (req, res, next) => {
         .then(modelRecipes => {
             const recipes = modelRecipes.map(recipe => recipe.toObject())
             const doableRecipes = getRecipeByIngredients(recipes, ingredients)
-            const byQuantity = getRecipeByIngredientsQuantity(recipes, ingredients)
-            logger.log(byQuantity)
+            // const byQuantity = getRecipeByIngredientsQuantity(recipes, ingredients)
             res.json(doableRecipes)
         })
         .catch(error => next(error))
@@ -108,10 +106,12 @@ const mergeQuantity = (apiData, selectedData, key = '_id') => {
 }
 
 const getRecipeByIngredients = (recipes, userIngredients) =>
-    recipes.filter(recipe =>
-        !recipe.ingredients.some(({ ingredient }) =>
+    recipes.filter(recipe => {
+        console.log(recipe.ingredients)
+        return !recipe.ingredients.some(({ ingredient }) =>
             !userIngredients.map(x => x._id.toString()).includes(ingredient._id.toString())
         )
+    }
     )
 
 const getRecipeByIngredientsQuantity = (recipes, userIngredients) =>

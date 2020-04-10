@@ -1,4 +1,5 @@
 const User = require('./userModel')
+const Ingredient = require('../ingredient/ingredientModel')
 const _ = require('lodash')
 
 exports.params = (req, res, next, id) => {
@@ -16,7 +17,7 @@ exports.params = (req, res, next, id) => {
 
 exports.get = (req, res, next) => {
     User.find({})
-        // .select('username email')
+        .select('-password')
         .then(users => res.json(users))
         .catch(error => next(error))
 }
@@ -28,6 +29,7 @@ exports.getOne = (req, res, next) => {
 exports.put = (req, res, next) => {
     let user = req.user
     let update = req.body
+    console.log('UPDATE', update)
     _.merge(user, update)
     user.save((error, savedUser) => (error ? next(error) : res.json(savedUser)))
 }
@@ -47,4 +49,11 @@ exports.delete = (req, res, next) => {
             res.json(removed)
         }
     })
+}
+
+exports.updateIngredients = async (req, res, next) => {
+    let user = req.user
+    let ingredients = await Ingredient.find().where('_id').in(req.body.ingredients).exec()
+    user.ingredients = ingredients
+    user.save((error, savedUser) => (error ? next(error) : res.json(savedUser)))
 }

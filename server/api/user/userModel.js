@@ -22,6 +22,12 @@ const UserSchema = new Schema({
             ref: 'recipes',
         }
     ],
+    ingredients: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'ingredient',
+        }
+    ],
     email: {
         type: String,
         required: true

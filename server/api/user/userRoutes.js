@@ -7,6 +7,9 @@ router.route('/')
     .get(controller.get)
     .post(controller.post)
 
+router.route('/ingredients/:id')
+    .put(controller.updateIngredients)
+
 router.route('/:id')
     .get(controller.getOne)
     .put(controller.put)
