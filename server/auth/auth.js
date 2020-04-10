@@ -14,7 +14,7 @@ exports.decodeToken = () => (req, res, next) => {
 exports.getFreshUser = () => (req, res, next) => {
     User.findById(req.user._id)
         .select('-password')
-        .populate('ingredients')
+        .populate('ingredients appliances')
         .then(user => {
             if (!user) {
                 res.status(401).send('Unathourized')

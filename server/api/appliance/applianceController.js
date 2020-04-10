@@ -36,3 +36,12 @@ exports.post = (req, res, next) => {
         .then(appliance => res.json(appliance))
         .catch(error => next(error))
 }
+
+exports.getList = (req, res, next) => {
+    const name = req.query.name || ''
+    const top = parseInt(req.query.top) || 10
+    Appliance.find({ name: new RegExp(name, 'ig') })
+        .limit(top)
+        .then(ingredients => res.json(ingredients))
+        .catch(error => next(error))
+}

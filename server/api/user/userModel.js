@@ -28,6 +28,12 @@ const UserSchema = new Schema({
             ref: 'ingredient',
         }
     ],
+    appliances: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'appliances',
+        }
+    ],
     email: {
         type: String,
         required: true

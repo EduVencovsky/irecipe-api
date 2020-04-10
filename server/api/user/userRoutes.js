@@ -10,6 +10,9 @@ router.route('/')
 router.route('/ingredients/:id')
     .put(controller.updateIngredients)
 
+router.route('/appliances/:id')
+    .put(controller.updateAppliances)
+
 router.route('/:id')
     .get(controller.getOne)
     .put(controller.put)

@@ -1,5 +1,6 @@
 const User = require('./userModel')
 const Ingredient = require('../ingredient/ingredientModel')
+const Appliance = require('../appliance/applianceModel')
 const _ = require('lodash')
 
 exports.params = (req, res, next, id) => {
@@ -53,7 +54,12 @@ exports.delete = (req, res, next) => {
 
 exports.updateIngredients = async (req, res, next) => {
     let user = req.user
-    let ingredients = await Ingredient.find().where('_id').in(req.body.ingredients).exec()
-    user.ingredients = ingredients
+    user.ingredients = await Ingredient.find().where('_id').in(req.body.ingredients).exec()
+    user.save((error, savedUser) => (error ? next(error) : res.json(savedUser)))
+}
+
+exports.updateAppliances = async (req, res, next) => {
+    let user = req.user
+    user.appliances = await Appliance.find().where('_id').in(req.body.appliances).exec()
     user.save((error, savedUser) => (error ? next(error) : res.json(savedUser)))
 }
