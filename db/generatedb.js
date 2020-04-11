@@ -14,6 +14,7 @@ const UserModel = require('../server/api/user/userModel')
 const RecipeModel = require('../server/api/recipe/recipeModel')
 const ApplianceModel = require('../server/api/appliance/applianceModel')
 const IngredientModel = require('../server/api/ingredient/ingredientModel')
+const MeasurementModel = require('../server/api/measurement/measurementModel')
 
 const consoleThen = res => console.log(res.data)
 const consoleCatch = error => console.log(error.response)
@@ -81,14 +82,19 @@ const deleteRecipes = () => {
         .then(consoleThen)
         .catch(consoleCatch)
 }
+const deleteMeasurement = () => {
+    MeasurementModel.deleteMany({})
+        .then(consoleThen)
+        .catch(consoleCatch)
+}
 
 const deleteAll = () => {
     deleteUsers()
     deleteAppliances()
     deleteIngredients()
     deleteRecipes()
+    deleteMeasurement()
 }
 deleteAll()
 generatedb()
 
-process.exit()
