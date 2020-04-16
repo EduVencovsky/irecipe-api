@@ -29,21 +29,31 @@ const RecipeSchema = new Schema({
             quantity: {
                 type: Number,
                 required: true
-            }
+            },
+            measurement: {
+                type: Schema.Types.ObjectId,
+                ref: 'measurement',
+                required: true
+            },
         }
     ],
     appliances: [{
-        appliance: {
-            type: Schema.Types.ObjectId,
-            ref: 'appliances',
-            required: true
-        },
-        quantity: {
-            type: Number,
-            required: true
+        type: Schema.Types.ObjectId,
+        ref: 'appliances',
+        required: true
+    }],
+    directions: [
+        {
+            direction: {
+                type: String,
+                required: true
+            },
+            order: {
+                type: Number,
+                required: true
+            }
         }
-    }]
-
+    ]
 })
 
 module.exports = mongoose.model('recipe', RecipeSchema)

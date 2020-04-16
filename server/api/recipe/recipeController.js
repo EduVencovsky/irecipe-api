@@ -5,7 +5,10 @@ const logger = require('../../util/logger')
 const _ = require('lodash')
 
 exports.params = (req, res, next, _id) => {
-    Recipe.findOne({ _id, author: req.user })
+    console.log('param req.user', req.user)
+    console.log('_id', _id)
+
+    Recipe.findOne({ _id, author: req.user._id })
         .populate('author', 'username email')
         .populate('ingredients.ingredient')
         .populate('appliances.appliance')
@@ -26,11 +29,30 @@ exports.params = (req, res, next, _id) => {
 exports.get = (req, res, next) => {
     Recipe.find()
         .populate('author', 'firstname username email')
-        .populate('ingredients.ingredient')
+        .populate('ingredients', 'ingredient quantity measurement')
         .populate('appliances.appliance')
+        .populate('directions', 'direction order')
         .exec()
         .then(recipes => res.json(recipes))
         .catch(error => next(error))
+}
+
+exports.getMyRecipe = (req, res, next) => {
+    let author = req.user
+
+    Recipe.find({ author })
+        .populate('ingredients.ingredient')
+        .populate('appliances.appliances')
+        .select('directions')
+        .exec()
+        .then(recipes => {
+            logger.log(recipes)
+            res.json(recipes)
+        })
+        .catch(error => {
+            logger.log('errore', error)
+            next(error)
+        })
 }
 
 exports.getOne = (req, res) => {
@@ -48,9 +70,21 @@ exports.put = (req, res, next) => {
 
 exports.post = (req, res, next) => {
     let newRecipe = req.body
+    console.log('old recipe ingredients', newRecipe.ingredients)
+    newRecipe.ingredients = newRecipe.ingredients.map(x => ({
+        ingredient: {
+            _id: x._id,
+            name: x.name,
+            description: x.description,
+            type: x.type,
+        },
+        quantity: x.quantity,
+        measurement: x.measurement,        
+    }))
+    console.log('new recipe ingredients', newRecipe.ingredients)
+
     newRecipe.author = req.user
-    let options = { upsert: true, new: true, setDefaultsOnInsert: true };
-    Recipe.findOneAndUpdate({ _id: newRecipe._id }, newRecipe, options)
+    Recipe.create(newRecipe)
         .then(recipe => res.json(recipe))
         .catch(error => next(error))
 }
@@ -111,8 +145,7 @@ const getRecipeByIngredients = (recipes, userIngredients) =>
         return !recipe.ingredients.some(({ ingredient }) =>
             !userIngredients.map(x => x._id.toString()).includes(ingredient._id.toString())
         )
-    }
-    )
+    })
 
 const getRecipeByIngredientsQuantity = (recipes, userIngredients) =>
     recipes.filter(recipe =>
