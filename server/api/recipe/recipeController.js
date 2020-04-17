@@ -5,13 +5,10 @@ const logger = require('../../util/logger')
 const _ = require('lodash')
 
 exports.params = (req, res, next, _id) => {
-    console.log('param req.user', req.user)
-    console.log('_id', _id)
-
-    Recipe.findOne({ _id, author: req.user._id })
+    Recipe.findOne({ _id })
         .populate('author', 'username email')
-        .populate('ingredients.ingredient')
-        .populate('appliances.appliance')
+        .populate('ingredients.ingredient ingredients.measurement')
+        .populate('appliances')
         .exec()
         .then(recipe => {
             if (!recipe) {
@@ -29,9 +26,9 @@ exports.params = (req, res, next, _id) => {
 exports.get = (req, res, next) => {
     Recipe.find()
         .populate('author', 'firstname username email')
-        .populate('ingredients', 'ingredient quantity measurement')
-        .populate('appliances', 'appliance')
-        .select('directions', 'direction order')
+        .populate('ingredients.ingredient')
+        .populate('appliances')
+        .select('directions name time')
         .exec()
         .then(recipes => res.json(recipes))
         .catch(error => next(error))
@@ -42,15 +39,12 @@ exports.getMyRecipe = (req, res, next) => {
 
     Recipe.find({ author })
         .populate('ingredients.ingredient')
-        .populate('appliances.appliances')
+        .populate('appliances')
         .select('directions name time')
         .exec()
-        .then(recipes => {
-            logger.log(recipes)
-            res.json(recipes)
-        })
+        .then(recipes => res.json(recipes))
         .catch(error => {
-            logger.log('errore', error)
+            logger.log('error', error)
             next(error)
         })
 }
@@ -70,7 +64,7 @@ exports.put = (req, res, next) => {
 
 exports.post = (req, res, next) => {
     let newRecipe = req.body
-    console.log('old recipe ingredients', newRecipe.ingredients)
+
     newRecipe.ingredients = newRecipe.ingredients.map(x => ({
         ingredient: {
             _id: x._id,
@@ -79,14 +73,24 @@ exports.post = (req, res, next) => {
             type: x.type,
         },
         quantity: x.quantity,
-        measurement: x.measurement,        
+        measurement: x.measurement,
     }))
-    console.log('new recipe ingredients', newRecipe.ingredients)
 
     newRecipe.author = req.user
-    Recipe.create(newRecipe)
-        .then(recipe => res.json(recipe))
-        .catch(error => next(error))
+
+    if (newRecipe._id) {
+        Recipe.findById(newRecipe._id)
+            .then(recipe => {
+                Object.assign(recipe, newRecipe)
+                return recipe.save()
+            })
+            .then(recipe => res.json(recipe))
+            .catch(error => next(error))
+    } else {
+        Recipe.create(newRecipe)
+            .then(recipe => res.json(recipe))
+            .catch(error => next(error))
+    }
 }
 
 exports.delete = (req, res, next) => {
@@ -101,15 +105,10 @@ exports.delete = (req, res, next) => {
 
 exports.getFullRecipe = async (req, res, next) => {
     let recipe = req.recipe ? req.recipe.toObject() : new Recipe().toObject()
-    let ingredients = await Ingredients.find({}).lean()
-    let appliances = await Appliance.find({}).lean()
-    recipe.ingredients = mergeQuantity(ingredients, recipe.ingredients.map(x =>
-        ({ ...x.ingredient, quantity: x.quantity }))
-    )
-    recipe.appliances = mergeQuantity(appliances, recipe.appliances.map(x =>
-        ({ ...x.appliance, quantity: x.quantity }))
-    )
-
+    recipe.ingredients = recipe.ingredients.map(({ ingredient, ...x }) => ({
+        ...x,
+        ...ingredient,
+    }))
     res.json(recipe)
 }
 
@@ -141,7 +140,6 @@ const mergeQuantity = (apiData, selectedData, key = '_id') => {
 
 const getRecipeByIngredients = (recipes, userIngredients) =>
     recipes.filter(recipe => {
-        console.log(recipe.ingredients)
         return !recipe.ingredients.some(({ ingredient }) =>
             !userIngredients.map(x => x._id.toString()).includes(ingredient._id.toString())
         )
