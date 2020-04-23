@@ -9,9 +9,9 @@ Instruções para subir o banco
 
 Instruções para subir a api
 
-- Rode o comando `npm install -g yarn`
-
 - Rode o comando `yarn` e depois `yarn run dev`
+
+- Se falar que yarn não existe, install o yarn rodando o comando `npm install -g yarn`
 
 
 
